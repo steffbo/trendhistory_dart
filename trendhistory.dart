@@ -5,60 +5,31 @@ import 'dart:io';
 import 'packages/crypto/crypto.dart';
 import 'packages/http/http.dart' as http;
 
-final String consumer_key = "Ba2ByaZNXoc7XVKFSb3ciPXH9";
-final String consumer_secret = "LFRLssfZieLWLe3730fTgvK2KQ86yueqG5GUzo58O17HWCaFRe";
-//final String access_token_key = "2879262400-fSyafXGHJ9pEZ3VaFFPrbyUQB4kSJPTyHdrcYsM";
-//final String access_token_secret = "YeUK31pzBom3F1gQZdbEhA3Pm3ettAkFfbHjz5n03xyKi";
+final Map<String, String> config = getApiSecret();
 
 const String BASE_URL = "https://api.twitter.com";
 const String API_VERSION = "1.1";
 
 const int BERLIN_WOEID = 638242;
 
-class Location {
-  String city;
-  int woeid;
-
-  Location(this.city, this.woeid);
-}
-
-class TrendMoment {
-  Location location;
-  DateTime datetime;
-  List<String> trends;
-
-  TrendMoment(this.location, this.datetime, this.trends);
-}
-
-class Trend {
-  Location location;
-  DateTime datetime;
-  String trend;
-
-  Trend.fromParams(this.location, this.datetime, this.trend);
-}
-
 main() {
-//  loadTrends();
-  getApiSecret();
+  loadTrends();
 }
 
 String encode(String str) => CryptoUtils.bytesToBase64(UTF8.encode(str));
 
-String getAuthString() => '${Uri.encodeFull(consumer_key)}:${Uri.encodeFull(consumer_secret)}';
+String getAuthString() => '${Uri.encodeFull(config['consumer_key'])}:${Uri.encodeFull(config['consumer_secret'])}';
+
+getApiSecret() {
+  File file = new File.fromUri(Uri.parse('resources/config.json'));
+  String content = file.readAsStringSync();
+  return JSON.decode(content);
+}
 
 void loadTrends() {
   requestBearerToken(getAuthString())
   .then((String bearer) => getTrends(bearer, BERLIN_WOEID))
   .then((List<Map> json) => listTrends(json));
-}
-
-getApiSecret() {
-  File file = new File.fromUri(Uri.parse('resources/config.json'));
-  String content = file.readAsStringSync();
-  Map<String, String> config = JSON.decode(content);
-  print('key: ${config['consumer_key']}');
-  print('secret: ${config['consumer_secret']}');
 }
 
 Future<String> requestBearerToken(String auth) {
