@@ -1,0 +1,5 @@
+.idea
+.pub
+packages
+*.lock
+resources/config.json
