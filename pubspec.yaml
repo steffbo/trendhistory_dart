@@ -2,5 +2,7 @@ name: trendhistory
 author: Stefan Remer
 description: Uses twitter's REST API to get trends.
 dependencies:
-  http: '>=0.11.2 <0.12.0'
   crypto: '>=0.9.0 <0.10.0'
+  http: '>=0.11.2 <0.12.0'
+  mongo_dart: '>=0.1.46 <0.2.0'
+  logging: '>=0.9.0 <0.11.0'
