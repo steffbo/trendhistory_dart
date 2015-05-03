@@ -14,6 +14,8 @@ class TrendTwitter {
 
   static const String _BASE_URL = "https://api.twitter.com";
   static const String _API_VERSION = "1.1";
+
+  static const int WORLD_WOEID = 1;
   static const int BERLIN_WOEID = 638242;
 
   TrendTwitter();
@@ -46,7 +48,7 @@ class TrendTwitter {
   }
 
   /// Returns current twitter trends for a location specified by [woeid].
-  Future<List<Map>> getTrends(int woeid) async {
+  Future<Map> getTrends(int woeid) async {
 
     String authToken = await _getAccessToken();
 
@@ -57,7 +59,7 @@ class TrendTwitter {
     Response response = await http.get(url, headers: headers);
     print('response from $url: ${response.body}');
     List<Map> obj = JSON.decode(response.body);
-    return obj;
+    return obj.first;
   }
 
 }
