@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'lib/mongo.dart';
 import 'lib/twitter.dart';
 
@@ -8,23 +6,22 @@ main() async {
   // Mongo DB wrapper
   TrendDB db = new TrendDB.fromDefault();
   Map selector = {'foo': 'bar'};
-  List<Map> res = await db.showDocuments(selector);
-  res.forEach((e) => print(e));
+  List<Map> documents = await db.showDocuments(selector);
+  documents.forEach((e) => print(e));
 
 
   // Twitter API wrapper
   TrendTwitter trendTwitter = new TrendTwitter();
-  List<Map> trends = await trendTwitter.getTrends(TrendTwitter.BERLIN_WOEID);
+  Map trends = await trendTwitter.getTrends(TrendTwitter.WORLD_WOEID);
   listTrends(trends);
+
+  await db.saveDocument(trends);
 }
 
 
-listTrends(List<Map> map) {
-
-  map.forEach((e) {
-    List<Map> trendList = e['trends'];
-    trendList.forEach((e) {
-      print(e['name']);
-    });
+listTrends(Map trends) {
+  List<Map> trendList = trends['trends'];
+  trendList.forEach((e) {
+    print(e['name']);
   });
 }
